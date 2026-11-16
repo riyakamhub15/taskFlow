@@ -28,6 +28,10 @@ app.use("/api/tasks", require("./routes/taskRoutes"));
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
+app.use(cors({
+  origin: "https://task-flow-three-azure.vercel.app",
+  credentials: true
+}));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
