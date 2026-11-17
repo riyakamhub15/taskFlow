@@ -31,7 +31,7 @@ const Home = () => {
 
         <div className="hero-content">
           <span className="hero-badge">
-            ✨ Organize your work. Achieve more.
+             Organize your work. Achieve more.
           </span>
 
           <h1>
@@ -150,7 +150,7 @@ const Home = () => {
         <div className="features-grid">
 
           <div className="feature-card">
-            <div className="feature-icon purple">📁</div>
+            <div className="feature-icon purple"></div>
             <h3>Project Management</h3>
             <p>
               Create, organize, edit and manage all your
@@ -159,7 +159,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon blue">✓</div>
+            <div className="feature-icon blue"></div>
             <h3>Task Management</h3>
             <p>
               Create tasks, set priorities, assign statuses
@@ -168,7 +168,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon green">📊</div>
+            <div className="feature-icon green"></div>
             <h3>Track Progress</h3>
             <p>
               Monitor completed, pending and ongoing tasks
@@ -177,7 +177,7 @@ const Home = () => {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon orange">🔍</div>
+            <div className="feature-icon orange"></div>
             <h3>Search & Filter</h3>
             <p>
               Quickly find tasks using search, status
