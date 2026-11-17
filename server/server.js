@@ -30,6 +30,8 @@ app.use(notFound);
 app.use(errorHandler);
 app.use(cors({
   origin: "https://task-flow-three-azure.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 const PORT = process.env.PORT || 5000;
