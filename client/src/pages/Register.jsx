@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+
 function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ function Register() {
     password: "",
   });
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -25,29 +25,34 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
-   try {
-  const response = await API.post("/auth/register", formData);
+    try {
+      await register(
+        formData.name,
+        formData.email,
+        formData.password
+      );
 
-  toast.success("Registration successful!");
+      toast.success("Registration successful!");
 
-  // Keep your existing login/navigation logic here
-} catch (error) {
-  const message =
-    error.response?.data?.message || "Registration failed. Please try again.";
+      navigate("/dashboard");
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
 
-  toast.error(message);
-}
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Create Account</h1>
         <p>Join TaskFlow today.</p>
-
-        {error && <p className="error">{error}</p>}
 
         <input
           type="text"
