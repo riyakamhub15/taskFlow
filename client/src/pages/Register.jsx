@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import { toast } from "react-toastify";
 function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -28,22 +28,18 @@ function Register() {
     setError("");
     setLoading(true);
 
-    try {
-      await register(
-        formData.name,
-        formData.email,
-        formData.password
-      );
+   try {
+  const response = await API.post("/auth/register", formData);
 
-      navigate("/dashboard");
-    } catch (error) {
-      setError(
-        error.response?.data?.message || "Registration failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  toast.success("Registration successful!");
+
+  // Keep your existing login/navigation logic here
+} catch (error) {
+  const message =
+    error.response?.data?.message || "Registration failed. Please try again.";
+
+  toast.error(message);
+}
 
   return (
     <div className="auth-container">

@@ -1,4 +1,4 @@
-
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -28,16 +28,17 @@ function Login() {
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password);
-      navigate("/dashboard");
-    } catch (error) {
-      setError(
-        error.response?.data?.message || "Login failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  const response = await API.post("/auth/login", formData);
+
+  toast.success("Login successful!");
+
+  // Keep your existing token, auth context and navigation logic here
+} catch (error) {
+  const message =
+    error.response?.data?.message || "Login failed. Please check your details.";
+
+  toast.error(message);
+}
 
   return (
     <div className="auth-container">
