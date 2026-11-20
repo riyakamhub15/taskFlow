@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {DndContext, useDroppable, closestCorners} from "@dnd-kit/core";
+import {DndContext, pointerWithin} from "@dnd-kit/core";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
 import KanbanColumn from "../components/KanbanColumn";
@@ -427,9 +427,9 @@ const handleDragEnd = async (event) => {
   <p>Loading tasks...</p>
 ) : (
   <DndContext
-    collisionDetection={closestCorners}
-    onDragEnd={handleDragEnd}
-  >
+  collisionDetection={pointerWithin}
+  onDragEnd={handleDragEnd}
+>
     <div className="kanban-board">
       {["Todo", "In Progress", "Completed"].map((status) => {
         const filteredTasks = tasks.filter(
