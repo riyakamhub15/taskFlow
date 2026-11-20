@@ -83,6 +83,14 @@ const Dashboard = () => {
     fetchProjects();
   }, []);
 
+  // Smooth scroll when switching between projects and tasks
+useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}, [selectedProject]);
+
   // Create or update project
   const handleProjectSubmit = async (projectData) => {
   try {
@@ -259,51 +267,58 @@ const Dashboard = () => {
       </section>
 
       {/* Project Section */}
-      <section className="projects-section">
-        <h2>My Projects</h2>
+      {/* Project Section */}
+{!selectedProject && (
+  <section className="projects-section page-transition">
+    <h2>My Projects</h2>
 
-        <ProjectForm
-          onSubmit={handleProjectSubmit}
-          editingProject={editingProject}
-          onCancel={() => setEditingProject(null)}
-        />
+    <ProjectForm
+      onSubmit={handleProjectSubmit}
+      editingProject={editingProject}
+      onCancel={() => setEditingProject(null)}
+    />
 
-        {loading ? (
-          <p>Loading projects...</p>
-        ) : projects.length === 0 ? (
-          <p>No projects found. Create your first project!</p>
-        ) : (
-          <div className="projects-container">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project._id}
-                project={project}
-                onEdit={handleEditProject}
-                onDelete={handleDeleteProject}
-                onViewTasks={handleViewTasks}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+    {loading ? (
+      <p>Loading projects...</p>
+    ) : projects.length === 0 ? (
+      <p>No projects found. Create your first project!</p>
+    ) : (
+      <div className="projects-container">
+        {projects.map((project) => (
+          <ProjectCard
+            key={project._id}
+            project={project}
+            onEdit={handleEditProject}
+            onDelete={handleDeleteProject}
+            onViewTasks={handleViewTasks}
+          />
+        ))}
+      </div>
+    )}
+  </section>
+)}
 
       {/* Task Section */}
-      {selectedProject && (
-        <section className="tasks-section">
+     {selectedProject && (
+  <section className="tasks-section page-transition">
 
           <h2>
             Tasks: {selectedProject.title}
           </h2>
 
           <button
-            onClick={() => {
-              setSelectedProject(null);
-              setTasks([]);
-              setEditingTask(null);
-            }}
-          >
-            Back to Projects
-          </button>
+  className="back-button"
+  onClick={() => {
+    setSelectedProject(null);
+    setTasks([]);
+    setEditingTask(null);
+    setSearch("");
+    setStatusFilter("");
+    setPriorityFilter("");
+  }}
+>
+  ← Back to Projects
+</button>
 
           {/* Search and Filters */}
           <div className="task-filters">
