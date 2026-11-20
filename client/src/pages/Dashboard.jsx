@@ -1,10 +1,10 @@
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import {DndContext, useDroppable, closestCorners} from "@dnd-kit/core";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
-
+import KanbanColumn from "../components/KanbanColumn";
 import ProjectForm from "../components/ProjectForm";
 import ProjectCard from "../components/ProjectCard";
 import TaskForm from "../components/TaskForm";
@@ -218,6 +218,54 @@ useEffect(() => {
   }
 };
 
+
+const handleDragEnd = async (event) => {
+  const { active, over } = event;
+
+  if (!over) return;
+
+  const taskId = active.id;
+  const newStatus = over.id;
+
+  const task = tasks.find((t) => t._id === taskId);
+
+  if (!task || task.status === newStatus) return;
+
+  const previousStatus = task.status;
+
+  // Optimistically update the UI
+  setTasks((prevTasks) =>
+    prevTasks.map((t) =>
+      t._id === taskId
+        ? { ...t, status: newStatus }
+        : t
+    )
+  );
+
+  try {
+    await API.put(`/tasks/${taskId}`, {
+      ...task,
+      status: newStatus,
+    });
+
+    toast.success(`Task moved to ${newStatus}!`);
+  } catch (error) {
+    // Restore previous status if API fails
+    setTasks((prevTasks) =>
+      prevTasks.map((t) =>
+        t._id === taskId
+          ? { ...t, status: previousStatus }
+          : t
+      )
+    );
+
+    toast.error(
+      error.response?.data?.message ||
+      "Failed to update task status"
+    );
+  }
+};
+
   // Apply search and filters
   const fetchFilteredTasks = () => {
     fetchTasks(selectedProject._id, {
@@ -373,26 +421,27 @@ useEffect(() => {
           />
 
           {/* Task List */}
-         {/* Kanban Task Board */}
+        
+{/* Kanban Task Board */}
 {loadingTasks ? (
   <p>Loading tasks...</p>
-) : tasks.length === 0 ? (
-  <p>No tasks found for this project.</p>
 ) : (
-  <div className="kanban-board">
-    {["Todo", "In Progress", "Completed"].map((status) => {
-      const filteredTasks = tasks.filter(
-        (task) => task.status === status
-      );
+  <DndContext
+    collisionDetection={closestCorners}
+    onDragEnd={handleDragEnd}
+  >
+    <div className="kanban-board">
+      {["Todo", "In Progress", "Completed"].map((status) => {
+        const filteredTasks = tasks.filter(
+          (task) => task.status === status
+        );
 
-      return (
-        <div className="kanban-column" key={status}>
-          <div className="kanban-column-header">
-            <h3>{status}</h3>
-            <span>{filteredTasks.length}</span>
-          </div>
-
-          <div className="kanban-tasks">
+        return (
+          <KanbanColumn
+            key={status}
+            status={status}
+            tasks={filteredTasks}
+          >
             {filteredTasks.length === 0 ? (
               <p className="empty-column">No tasks here</p>
             ) : (
@@ -405,12 +454,13 @@ useEffect(() => {
                 />
               ))
             )}
-          </div>
-        </div>
-      );
-    })}
-  </div>
+          </KanbanColumn>
+        );
+      })}
+    </div>
+  </DndContext>
 )}
+
 
         </section>
       )}

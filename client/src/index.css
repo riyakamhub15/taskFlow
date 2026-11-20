@@ -568,3 +568,9 @@ button.cancel-btn {
     grid-template-columns: 1fr;
   }
 }
+
+.kanban-column-over {
+  background: #e0e7ff;
+  border: 2px dashed #6366f1;
+  transition: background 0.2s ease;
+}
