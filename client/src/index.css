@@ -515,3 +515,56 @@ button.cancel-btn {
 .back-button:hover {
   transform: translateX(-4px);
 }
+
+/* Kanban Board */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 25px;
+  align-items: start;
+}
+
+.kanban-column {
+  background: #f4f5f7;
+  padding: 16px;
+  border-radius: 12px;
+  min-height: 250px;
+}
+
+.kanban-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.kanban-column-header h3 {
+  font-size: 16px;
+}
+
+.kanban-column-header span {
+  background: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.kanban-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.empty-column {
+  color: #888;
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+}

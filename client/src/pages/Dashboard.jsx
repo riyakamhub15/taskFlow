@@ -373,22 +373,44 @@ useEffect(() => {
           />
 
           {/* Task List */}
-          {loadingTasks ? (
-            <p>Loading tasks...</p>
-          ) : tasks.length === 0 ? (
-            <p>No tasks found for this project.</p>
-          ) : (
-            <div className="tasks-container">
-              {tasks.map((task) => (
+         {/* Kanban Task Board */}
+{loadingTasks ? (
+  <p>Loading tasks...</p>
+) : tasks.length === 0 ? (
+  <p>No tasks found for this project.</p>
+) : (
+  <div className="kanban-board">
+    {["Todo", "In Progress", "Completed"].map((status) => {
+      const filteredTasks = tasks.filter(
+        (task) => task.status === status
+      );
+
+      return (
+        <div className="kanban-column" key={status}>
+          <div className="kanban-column-header">
+            <h3>{status}</h3>
+            <span>{filteredTasks.length}</span>
+          </div>
+
+          <div className="kanban-tasks">
+            {filteredTasks.length === 0 ? (
+              <p className="empty-column">No tasks here</p>
+            ) : (
+              filteredTasks.map((task) => (
                 <TaskCard
                   key={task._id}
                   task={task}
                   onEdit={handleEditTask}
                   onDelete={handleDeleteTask}
                 />
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
 
         </section>
       )}
