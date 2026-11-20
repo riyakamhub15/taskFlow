@@ -1,4 +1,4 @@
-
+import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -85,26 +85,27 @@ const Dashboard = () => {
 
   // Create or update project
   const handleProjectSubmit = async (projectData) => {
-    try {
-      if (editingProject) {
-        await API.put(
-          `/projects/${editingProject._id}`,
-          projectData
-        );
-
-        setEditingProject(null);
-      } else {
-        await API.post("/projects", projectData);
-      }
-
-      await fetchProjects();
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Failed to save project"
+  try {
+    if (editingProject) {
+      await API.put(
+        `/projects/${editingProject._id}`,
+        projectData
       );
+
+      setEditingProject(null);
+      toast.success("Project updated successfully!");
+    } else {
+      await API.post("/projects", projectData);
+      toast.success("Project created successfully!");
     }
-  };
+
+    await fetchProjects();
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to save project"
+    );
+  }
+};
 
   // Edit project
   const handleEditProject = (project) => {
@@ -113,28 +114,28 @@ const Dashboard = () => {
 
   // Delete project
   const handleDeleteProject = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this project?"
-    );
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this project?"
+  );
 
-    if (!confirmDelete) return;
+  if (!confirmDelete) return;
 
-    try {
-      await API.delete(`/projects/${id}`);
+  try {
+    await API.delete(`/projects/${id}`);
 
-      if (selectedProject?._id === id) {
-        setSelectedProject(null);
-        setTasks([]);
-      }
-
-      await fetchProjects();
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Failed to delete project"
-      );
+    if (selectedProject?._id === id) {
+      setSelectedProject(null);
+      setTasks([]);
     }
-  };
+
+    await fetchProjects();
+    toast.success("Project deleted successfully!");
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to delete project"
+    );
+  }
+};
 
   // Select project and fetch its tasks
   const handleViewTasks = (project) => {
@@ -149,33 +150,35 @@ const Dashboard = () => {
 
   // Create or update task
   const handleTaskSubmit = async (taskData) => {
-    try {
-      if (editingTask) {
-        await API.put(
-          `/tasks/${editingTask._id}`,
-          taskData
-        );
-
-        setEditingTask(null);
-      } else {
-        await API.post("/tasks", {
-          ...taskData,
-          projectId: selectedProject._id,
-        });
-      }
-
-      await fetchTasks(selectedProject._id, {
-        search,
-        status: statusFilter,
-        priority: priorityFilter,
-      });
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Failed to save task"
+  try {
+    if (editingTask) {
+      await API.put(
+        `/tasks/${editingTask._id}`,
+        taskData
       );
+
+      setEditingTask(null);
+      toast.success("Task updated successfully!");
+    } else {
+      await API.post("/tasks", {
+        ...taskData,
+        projectId: selectedProject._id,
+      });
+
+      toast.success("Task created successfully!");
     }
-  };
+
+    await fetchTasks(selectedProject._id, {
+      search,
+      status: statusFilter,
+      priority: priorityFilter,
+    });
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to save task"
+    );
+  }
+};
 
   // Edit task
   const handleEditTask = (task) => {
@@ -184,27 +187,28 @@ const Dashboard = () => {
 
   // Delete task
   const handleDeleteTask = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this task?"
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this task?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await API.delete(`/tasks/${id}`);
+
+    await fetchTasks(selectedProject._id, {
+      search,
+      status: statusFilter,
+      priority: priorityFilter,
+    });
+
+    toast.success("Task deleted successfully!");
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to delete task"
     );
-
-    if (!confirmDelete) return;
-
-    try {
-      await API.delete(`/tasks/${id}`);
-
-      await fetchTasks(selectedProject._id, {
-        search,
-        status: statusFilter,
-        priority: priorityFilter,
-      });
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Failed to delete task"
-      );
-    }
-  };
+  }
+};
 
   // Apply search and filters
   const fetchFilteredTasks = () => {
@@ -247,13 +251,7 @@ const Dashboard = () => {
         </button>
       </header>
 
-      {/* Error Message */}
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
-
+    
       {/* Task Statistics */}
       <section className="dashboard-stats">
         <h2>Task Overview</h2>
