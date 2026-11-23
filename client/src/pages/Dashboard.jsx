@@ -10,6 +10,7 @@ import ProjectCard from "../components/ProjectCard";
 import TaskForm from "../components/TaskForm";
 import TaskCard from "../components/TaskCard";
 import TaskStats from "../components/TaskStats";
+import NotificationSettings from "../components/NotificationSettings";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -313,6 +314,11 @@ const handleDragEnd = async (event) => {
         <h2>Task Overview</h2>
         <TaskStats />
       </section>
+
+{/* Notification Settings */}
+<section className="notification-section">
+  <NotificationSettings />
+</section>
 
       {/* Project Section */}
       {/* Project Section */}

@@ -1,4 +1,4 @@
-
+const pushRoutes = require("./routes/pushRoutes");
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 });
 
 // API routes
+app.use("/api/push", pushRoutes);
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
