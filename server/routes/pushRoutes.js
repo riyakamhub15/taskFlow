@@ -27,7 +27,7 @@ router.post("/subscribe", authMiddleware, async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.userId);
 
     if (!user) {
       return res.status(404).json({
@@ -48,10 +48,12 @@ router.post("/subscribe", authMiddleware, async (req, res) => {
       message: "Browser subscribed successfully!",
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Failed to save subscription",
-    });
-  }
+  console.error("Subscription save error:", error);
+
+  res.status(500).json({
+    message: "Failed to save subscription",
+  });
+}
 });
 
 module.exports = router;
